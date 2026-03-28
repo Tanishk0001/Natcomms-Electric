@@ -80,31 +80,32 @@ export default function Services() {
         </div>
 
         {/* Additional Services List */}
-        <div className="mt-32 bg-slate-50 rounded-[3rem] p-12 md:p-20">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-extrabold text-slate-900">Additional Services</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              'Switchboard upgrades',
-              'Lighting installation',
-              'Fault finding & repairs',
-              'Power point installation',
-              'Wiring & rewiring',
-              'Safety inspections'
-            ].map((item) => (
-              <div key={item} className="bg-white p-6 rounded-2xl flex items-center gap-4 shadow-sm">
-                <div className="w-12 h-12 flex items-center justify-center shrink-0 overflow-hidden">
-                  <img 
-                    src="https://lh3.googleusercontent.com/d/1-em5jqYibujv_D-PWZzj_HxzG9y3XLXj" 
-                    alt="Logo" 
-                    className="w-full h-full object-contain"
-                    referrerPolicy="no-referrer"
-                  />
+        <div className="mt-32 bg-slate-900 rounded-[4rem] p-12 md:p-24 text-white relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full -translate-y-1/2 translate-x-1/2 blur-[120px]" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-secondary/10 rounded-full translate-y-1/2 -translate-x-1/2 blur-[120px]" />
+          
+          <div className="relative z-10">
+            <div className="text-center mb-20">
+              <h2 className="text-sm font-black text-secondary uppercase tracking-[0.4em] mb-4">Expertise</h2>
+              <p className="text-4xl md:text-5xl font-extrabold tracking-tight">Additional Specializations</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+              {[
+                'Switchboard upgrades',
+                'Lighting installation',
+                'Fault finding & repairs',
+                'Power point installation',
+                'Wiring & rewiring',
+                'Safety inspections'
+              ].map((item) => (
+                <div key={item} className="bg-white/5 backdrop-blur-md p-8 rounded-[2.5rem] flex flex-col items-center gap-6 border border-white/10 hover:bg-white/10 transition-all group text-center">
+                  <div className="w-24 h-24 flex items-center justify-center shrink-0 overflow-hidden bg-white/10 rounded-[1.5rem] group-hover:scale-110 group-hover:bg-white/20 transition-all duration-500 shadow-[0_0_20px_rgba(255,255,255,0.05)]">
+                    <Zap className="w-10 h-10 text-secondary drop-shadow-[0_0_8px_rgba(255,215,0,0.3)]" />
+                  </div>
+                  <span className="font-black text-xl tracking-tight text-white">{item}</span>
                 </div>
-                <span className="font-bold text-slate-800">{item}</span>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>

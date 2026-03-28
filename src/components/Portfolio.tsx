@@ -4,7 +4,7 @@ import { motion } from 'motion/react';
 const galleryItems = [
   { id: 1, title: 'Residential Wiring', category: 'Residential', img: 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=800' },
   { id: 2, title: 'Commercial Panel', category: 'Commercial', img: 'https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?auto=format&fit=crop&q=80&w=800' },
-  { id: 3, title: 'Emergency Repair', category: 'Emergency', img: 'https://images.unsplash.com/photo-1565608438257-fac3c27beb36?auto=format&fit=crop&q=80&w=800' },
+  { id: 3, title: 'Emergency Repair', category: 'Emergency', img: 'https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?auto=format&fit=crop&q=80&w=800' },
   { id: 4, title: 'Modern Lighting', category: 'Residential', img: 'https://images.unsplash.com/photo-1558211583-d26f610c1eb1?auto=format&fit=crop&q=80&w=800' },
   { id: 5, title: 'Industrial Setup', category: 'Commercial', img: 'https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80&w=800' },
   { id: 6, title: 'Safety Inspection', category: 'Maintenance', img: 'https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&q=80&w=800' },

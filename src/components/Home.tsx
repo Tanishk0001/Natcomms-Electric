@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
-      <section className="relative min-h-[850px] lg:min-h-screen flex items-center pt-20 overflow-hidden">
+      <section className="relative min-h-[850px] lg:min-h-screen flex items-center pt-40 overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img
             src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=2069"
@@ -20,21 +20,18 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-r from-slate-900/80 to-transparent" />
         </div>
 
-        <div className="relative z-20 max-w-7xl mx-auto px-6 w-full pb-20 lg:pb-48">
+        <div className="relative z-20 max-w-7xl mx-auto px-6 w-full pb-20 lg:pb-48 mt-12">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             className="max-w-2xl"
           >
-            <div className="inline-flex items-center gap-2 bg-secondary/20 text-secondary border border-secondary/30 px-4 py-1.5 rounded-full text-sm font-bold mb-6">
-              <img 
-                src="https://lh3.googleusercontent.com/d/1-em5jqYibujv_D-PWZzj_HxzG9y3XLXj" 
-                alt="Logo" 
-                className="w-5 h-5 object-contain"
-                referrerPolicy="no-referrer"
-              />
-              24/7 Emergency Support
+            <div className="inline-flex items-center gap-4 bg-white/10 backdrop-blur-2xl text-white border border-white/20 px-8 py-3 rounded-full text-sm font-black mb-10 shadow-[0_0_30px_rgba(255,255,255,0.1)] group cursor-default">
+              <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center group-hover:bg-primary/40 transition-all duration-500">
+                <Clock className="w-5 h-5 text-secondary" />
+              </div>
+              <span className="tracking-[0.2em] uppercase text-xs">24/7 Emergency Support</span>
             </div>
             <h1 className="text-5xl md:text-7xl font-extrabold text-white leading-[1.1] mb-6 tracking-tight">
               Powering Homes & Businesses with <span className="text-secondary">Reliable</span> Solutions
@@ -91,7 +88,7 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
             {[
-              { icon: null, title: 'Same-Day Service', desc: 'Fast response for all jobs.' },
+              { icon: Zap, title: 'Same-Day Service', desc: 'Fast response for all jobs.' },
               { icon: ShieldCheck, title: 'Licensed Experts', desc: 'Fully insured professionals.' },
               { icon: Award, title: 'Fixed Pricing', desc: 'No hidden costs, ever.' },
               { icon: Clock, title: '24/7 Support', desc: 'Emergency help when needed.' },
@@ -105,19 +102,10 @@ export default function Home() {
                 viewport={{ once: true }}
                 className="bg-white p-8 rounded-3xl shadow-sm hover:shadow-xl transition-all group text-center"
               >
-                <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 transition-colors overflow-hidden">
-                  {item.icon ? (
-                    <div className="w-full h-full bg-primary/5 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors">
-                      <item.icon className="w-8 h-8 text-primary group-hover:text-white" />
-                    </div>
-                  ) : (
-                    <img 
-                      src="https://lh3.googleusercontent.com/d/1-em5jqYibujv_D-PWZzj_HxzG9y3XLXj" 
-                      alt="Logo" 
-                      className="w-full h-full object-contain"
-                      referrerPolicy="no-referrer"
-                    />
-                  )}
+                <div className="w-24 h-24 rounded-3xl flex items-center justify-center mx-auto mb-8 transition-all duration-500 overflow-hidden group-hover:scale-110">
+                  <div className="w-full h-full bg-slate-50 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all duration-500 shadow-inner">
+                    <item.icon className="w-10 h-10 text-primary group-hover:text-white transition-all" />
+                  </div>
                 </div>
                 <h3 className="text-lg font-bold mb-2">{item.title}</h3>
                 <p className="text-sm text-slate-500">{item.desc}</p>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Shield, Users, MapPin, CheckCircle2 } from 'lucide-react';
+import { Shield, Users, MapPin, CheckCircle2, ShieldCheck } from 'lucide-react';
 
 export default function About() {
   return (
@@ -84,15 +84,19 @@ export default function About() {
         </div>
 
         {/* Credentials */}
-        <div className="text-center">
-          <h2 className="text-sm font-black text-secondary uppercase tracking-[0.3em] mb-12">Our Credentials</h2>
-          <div className="flex flex-wrap justify-center gap-8 md:gap-12">
+        <div className="text-center bg-slate-50 rounded-[4rem] p-16 md:p-24 border border-slate-100 shadow-inner">
+          <h2 className="text-sm font-black text-secondary uppercase tracking-[0.5em] mb-16">Our Credentials</h2>
+          <div className="flex flex-wrap justify-center gap-8 md:gap-16">
             {['ISO Certified', 'Master Electricians', 'NSW Licensed', 'Safety First'].map((logo) => (
               <div 
                 key={logo} 
-                className="text-xl md:text-2xl font-black text-slate-700 border-2 border-slate-300 px-8 py-4 rounded-2xl bg-white shadow-sm hover:shadow-md hover:border-primary hover:text-primary transition-all duration-300 cursor-default"
+                className="group flex flex-col items-center gap-6"
               >
-                {logo}
+                <div className="w-28 h-28 bg-white rounded-[2rem] flex items-center justify-center shadow-2xl border border-slate-100 group-hover:scale-110 group-hover:border-primary transition-all duration-500 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <ShieldCheck className="w-12 h-12 text-primary relative z-10 group-hover:text-secondary transition-colors duration-500" />
+                </div>
+                <span className="text-lg font-black text-slate-900 tracking-tight">{logo}</span>
               </div>
             ))}
           </div>

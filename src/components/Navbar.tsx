@@ -39,7 +39,7 @@ export default function Navbar() {
             src="https://lh3.googleusercontent.com/d/1-em5jqYibujv_D-PWZzj_HxzG9y3XLXj" 
             alt="National Electro Logo" 
             className={cn(
-              "h-16 w-auto object-contain group-hover:scale-105 transition-all duration-300",
+              "h-24 w-auto object-contain group-hover:scale-110 transition-all duration-500 drop-shadow-[0_0_15px_rgba(0,102,204,0.3)] group-hover:drop-shadow-[0_0_25px_rgba(0,102,204,0.5)]",
               shouldShowTransparent && "brightness-0 invert"
             )}
             referrerPolicy="no-referrer"
@@ -47,13 +47,13 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-10">
           {navLinks.map((link) => (
             <Link
               key={link.name}
               to={link.href}
               className={cn(
-                "text-sm font-semibold transition-colors hover:text-secondary",
+                "text-sm font-bold tracking-wide uppercase transition-colors hover:text-secondary",
                 location.pathname === link.href 
                   ? "text-secondary" 
                   : shouldShowTransparent ? "text-white" : "text-slate-600"
@@ -64,7 +64,7 @@ export default function Navbar() {
           ))}
           <a
             href="tel:0280054322"
-            className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-full font-bold text-sm hover:bg-secondary transition-all shadow-lg hover:shadow-primary/20"
+            className="flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-full font-black text-sm hover:bg-secondary hover:text-slate-900 transition-all shadow-xl hover:shadow-primary/30"
           >
             <Phone className="w-4 h-4" />
             (02) 8005 4322

@@ -7,16 +7,16 @@ export default function Footer() {
     <footer className="bg-slate-900 text-slate-300 pt-16 pb-8 px-6">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
         {/* Brand */}
-        <div className="space-y-6">
-          <Link to="/" className="flex items-center gap-2">
+        <div className="space-y-10">
+          <Link to="/" className="flex items-center gap-2 group">
             <img 
               src="https://lh3.googleusercontent.com/d/1-em5jqYibujv_D-PWZzj_HxzG9y3XLXj" 
               alt="National Electro Logo" 
-              className="h-14 w-auto object-contain brightness-0 invert"
+              className="h-24 w-auto object-contain brightness-0 invert drop-shadow-[0_0_15px_rgba(255,255,255,0.2)] group-hover:scale-105 transition-all duration-500"
               referrerPolicy="no-referrer"
             />
           </Link>
-          <p className="text-sm leading-relaxed">
+          <p className="text-sm leading-relaxed text-slate-400 max-w-xs">
             Sydney's most trusted electrical service provider. Licensed, insured, and ready to power your home or business 24/7.
           </p>
           <div className="flex gap-4">
