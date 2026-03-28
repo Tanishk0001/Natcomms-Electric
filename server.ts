@@ -1,5 +1,4 @@
 import express from "express";
-import { createServer as createViteServer } from "vite";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -13,23 +12,34 @@ app.use(express.json());
 
 // API Route for Contact Form
 app.post("/api/contact", async (req, res) => {
-  const { name, phone, service, message } = req.body;
-  
-  // Simulate processing time
-  await new Promise(resolve => setTimeout(resolve, 1500));
+  try {
+    const { name, phone, service, message } = req.body;
+    
+    // Basic validation
+    if (!name || !phone) {
+      return res.status(400).json({ success: false, message: "Name and phone are required." });
+    }
 
-  console.log(`New Inquiry Received for service@nationalelectro.com.au:`);
-  console.log(`Name: ${name}`);
-  console.log(`Phone: ${phone}`);
-  console.log(`Service: ${service}`);
-  console.log(`Message: ${message}`);
+    // Simulate processing time
+    await new Promise(resolve => setTimeout(resolve, 1500));
 
-  res.status(200).json({ success: true, message: "Inquiry received successfully!" });
+    console.log(`New Inquiry Received for service@nationalelectro.com.au:`);
+    console.log(`Name: ${name}`);
+    console.log(`Phone: ${phone}`);
+    console.log(`Service: ${service}`);
+    console.log(`Message: ${message}`);
+
+    res.status(200).json({ success: true, message: "Inquiry received successfully!" });
+  } catch (error) {
+    console.error("Contact Form Error:", error);
+    res.status(500).json({ success: false, message: "Internal server error." });
+  }
 });
 
 async function startServer() {
   // Vite middleware for development
   if (process.env.NODE_ENV !== "production") {
+    const { createServer: createViteServer } = await import("vite");
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",
@@ -43,13 +53,14 @@ async function startServer() {
     });
   }
 
-  app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-  });
+  // Only listen if not running as a serverless function
+  if (!process.env.VERCEL) {
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(`Server running on http://localhost:${PORT}`);
+    });
+  }
 }
 
-if (process.env.NODE_ENV !== "production" || !process.env.VERCEL) {
-  startServer();
-}
+startServer();
 
 export default app;
