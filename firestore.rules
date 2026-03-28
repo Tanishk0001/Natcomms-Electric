@@ -1,0 +1,48 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: reviews
+    // Document ID: auto-generated
+    // Fields:
+    //   - name: string (required, 1-50 chars) - Reviewer name
+    //   - rating: number (required, 1-5) - Star rating
+    //   - comment: string (required, 1-500 chars) - Review text
+    //   - createdAt: timestamp (required) - Submission time
+    //   - approved: bool (optional) - Moderation status
+    //
+    // ===============================================================
+
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isValidReview(data) {
+      return data.keys().hasAll(['name', 'rating', 'comment', 'createdAt']) &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 50 &&
+             data.rating is number && data.rating >= 1 && data.rating <= 5 &&
+             data.comment is string && data.comment.size() > 0 && data.comment.size() <= 500 &&
+             data.createdAt is timestamp;
+    }
+
+    match /reviews/{reviewId} {
+      // Allow anyone to read reviews
+      allow read: if true;
+      
+      // Allow anyone to create a review with strict validation
+      allow create: if isValidReview(request.resource.data) && 
+                      (!('approved' in request.resource.data) || request.resource.data.approved is bool);
+      
+      // Only admins can update or delete (for moderation)
+      allow update, delete: if false; // Add admin logic later if needed
+    }
+
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
