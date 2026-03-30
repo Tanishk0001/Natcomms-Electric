@@ -27,7 +27,10 @@ export default function Navbar() {
   const shouldShowTransparent = isHomePage && !scrolled;
 
   return (
-    <nav
+    <motion.nav
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
       className={cn(
         'fixed top-0 left-0 right-0 z-50 transition-all duration-300 px-6 py-4',
         shouldShowTransparent ? 'bg-transparent' : 'bg-white shadow-md py-3'
@@ -37,7 +40,7 @@ export default function Navbar() {
         <Link to="/" className="flex items-center gap-2 group">
           <img 
             src="https://lh3.googleusercontent.com/d/1-em5jqYibujv_D-PWZzj_HxzG9y3XLXj" 
-            alt="National Electro Logo" 
+            alt="National Electrics Logo" 
             className={cn(
               "h-24 w-auto object-contain group-hover:scale-110 transition-all duration-500 drop-shadow-[0_0_15px_rgba(0,102,204,0.3)] group-hover:drop-shadow-[0_0_25px_rgba(0,102,204,0.5)]",
               shouldShowTransparent && "brightness-0 invert"
@@ -117,6 +120,6 @@ export default function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </nav>
+    </motion.nav>
   );
 }

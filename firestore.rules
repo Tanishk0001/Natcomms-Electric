@@ -29,6 +29,15 @@ service cloud.firestore {
              data.createdAt is timestamp;
     }
 
+    function isValidContact(data) {
+      return data.keys().hasAll(['name', 'phone', 'service', 'message', 'createdAt']) &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 100 &&
+             data.phone is string && data.phone.size() > 0 && data.phone.size() <= 20 &&
+             data.service is string && data.service.size() > 0 && data.service.size() <= 100 &&
+             data.message is string && data.message.size() > 0 && data.message.size() <= 2000 &&
+             data.createdAt is timestamp;
+    }
+
     match /reviews/{reviewId} {
       // Allow anyone to read reviews
       allow read: if true;
@@ -39,6 +48,17 @@ service cloud.firestore {
       
       // Only admins can update or delete (for moderation)
       allow update, delete: if false; // Add admin logic later if needed
+    }
+
+    match /contacts/{contactId} {
+      // Only admins can read inquiries
+      allow read: if request.auth != null; // Simplified for now, should be isAdmin()
+      
+      // Allow anyone to submit an inquiry
+      allow create: if isValidContact(request.resource.data);
+      
+      // No updates or deletes allowed for inquiries once submitted
+      allow update, delete: if false;
     }
 
     match /users/{userId} {

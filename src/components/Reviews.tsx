@@ -76,8 +76,18 @@ export default function Reviews() {
   };
 
   return (
-    <section className="py-24 bg-slate-50 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="py-24 bg-slate-50 overflow-hidden relative">
+      {/* Decorative background elements */}
+      <div className="absolute top-0 right-0 w-1/3 h-full opacity-5 pointer-events-none">
+        <img 
+          src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=800" 
+          alt="" 
+          className="w-full h-full object-cover grayscale"
+          referrerPolicy="no-referrer"
+        />
+      </div>
+      
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
           
           {/* Left: Review Form */}

@@ -1,6 +1,59 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Phone, Mail, MapPin, Send, Clock, CheckCircle2, Loader2 } from 'lucide-react';
+import { db, auth } from '../firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+
+enum OperationType {
+  CREATE = 'create',
+  UPDATE = 'update',
+  DELETE = 'delete',
+  LIST = 'list',
+  GET = 'get',
+  WRITE = 'write',
+}
+
+interface FirestoreErrorInfo {
+  error: string;
+  operationType: OperationType;
+  path: string | null;
+  authInfo: {
+    userId: string | undefined;
+    email: string | null | undefined;
+    emailVerified: boolean | undefined;
+    isAnonymous: boolean | undefined;
+    tenantId: string | null | undefined;
+    providerInfo: {
+      providerId: string;
+      displayName: string | null;
+      email: string | null;
+      photoUrl: string | null;
+    }[];
+  }
+}
+
+function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
+  const errInfo: FirestoreErrorInfo = {
+    error: error instanceof Error ? error.message : String(error),
+    authInfo: {
+      userId: auth.currentUser?.uid,
+      email: auth.currentUser?.email,
+      emailVerified: auth.currentUser?.emailVerified,
+      isAnonymous: auth.currentUser?.isAnonymous,
+      tenantId: auth.currentUser?.tenantId,
+      providerInfo: auth.currentUser?.providerData.map(provider => ({
+        providerId: provider.providerId,
+        displayName: provider.displayName,
+        email: provider.email,
+        photoUrl: provider.photoURL
+      })) || []
+    },
+    operationType,
+    path
+  }
+  console.error('Firestore Error: ', JSON.stringify(errInfo));
+  throw new Error(JSON.stringify(errInfo));
+}
 
 export default function Contact() {
   const [formState, setFormState] = useState<'idle' | 'submitting' | 'success'>('idle');
@@ -16,23 +69,59 @@ export default function Contact() {
     setFormState('submitting');
     
     try {
-      const response = await fetch('/api/contact', {
+      // 1. Save to Firestore (Backup & Dashboard)
+      try {
+        await addDoc(collection(db, 'contacts'), {
+          ...formData,
+          createdAt: serverTimestamp()
+        });
+      } catch (error) {
+        handleFirestoreError(error, OperationType.WRITE, 'contacts');
+      }
+
+      // 2. Send via FormSubmit (No SMTP required)
+      // This will send an email to service@nationalelectro.com.au
+      console.log('Sending inquiry to FormSubmit for:', formData.name);
+      const response = await fetch('https://formsubmit.co/ajax/service@nationalelectro.com.au', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        mode: 'cors',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          phone: formData.phone,
+          service: formData.service,
+          message: formData.message,
+          _subject: `New Website Inquiry from ${formData.name}`,
+          _template: 'table'
+        })
       });
       
-      if (response.ok) {
+      const result = await response.json();
+      console.log('FormSubmit response:', result);
+      
+      if (response.ok && (result.success === 'true' || result.success === true)) {
         setFormState('success');
         setFormData({ name: '', phone: '', service: 'Residential Electrical', message: '' });
         setTimeout(() => setFormState('idle'), 5000);
       } else {
-        throw new Error('Failed to submit');
+        console.error('FormSubmit error detail:', result);
+        throw new Error(result.message || 'Failed to send email. Please check if your email is confirmed with FormSubmit.');
       }
     } catch (err) {
-      console.error(err);
+      console.error('Contact error:', err);
       setFormState('idle');
-      alert('Something went wrong. Please try again.');
+      
+      // Check if it's a Firestore permission error
+      if (err instanceof Error && err.message.includes('insufficient permissions')) {
+        alert('Permission denied. Please check your Firebase Security Rules.');
+      } else if (err instanceof Error && err.message.includes('offline')) {
+        alert('The client is offline. Please check your internet connection and Firebase configuration.');
+      } else {
+        alert(`Something went wrong: ${err instanceof Error ? err.message : 'Unknown error'}. Please try again or call us directly.`);
+      }
     }
   };
 
@@ -41,7 +130,11 @@ export default function Contact() {
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
           {/* Info Side */}
-          <div>
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+          >
             <h1 className="text-5xl md:text-7xl font-extrabold text-slate-900 mb-8 tracking-tight">
               Let's Get <span className="text-primary">Started</span>
             </h1>
@@ -78,7 +171,20 @@ export default function Contact() {
 
               <div className="flex gap-6 items-start">
                 <div className="w-14 h-14 bg-accent/10 rounded-2xl flex items-center justify-center shrink-0">
-                  <Clock className="w-7 h-7 text-accent" />
+                  <MapPin className="w-7 h-7 text-accent" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold mb-1">Our Location</h3>
+                  <p className="text-slate-500 mb-1">Serving all of Sydney.</p>
+                  <p className="text-xl font-bold text-slate-900">
+                    Sydney, NSW, Australia
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-6 items-start">
+                <div className="w-14 h-14 bg-slate-100 rounded-2xl flex items-center justify-center shrink-0">
+                  <Clock className="w-7 h-7 text-slate-600" />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold mb-1">Hours</h3>
@@ -87,10 +193,15 @@ export default function Contact() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Form Side */}
-          <div className="bg-white rounded-[3rem] p-8 md:p-12 shadow-2xl border border-slate-100 relative overflow-hidden">
+          <motion.div 
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+            className="bg-white rounded-[3rem] p-8 md:p-12 shadow-2xl border border-slate-100 relative overflow-hidden"
+          >
             <AnimatePresence mode="wait">
               {formState === 'success' ? (
                 <motion.div
@@ -105,7 +216,7 @@ export default function Contact() {
                   </div>
                   <h2 className="text-3xl font-extrabold text-slate-900 mb-4">Message Sent!</h2>
                   <p className="text-slate-600 mb-8">
-                    Thank you for reaching out. We've received your inquiry and will get back to you shortly at <strong>service@nationalelectro.com.au</strong>.
+                    Thank you for reaching out. We've received your inquiry and will get back to you shortly.
                   </p>
                   <button
                     onClick={() => setFormState('idle')}
@@ -178,12 +289,12 @@ export default function Contact() {
                     >
                       {formState === 'submitting' ? (
                         <>
-                          Sending...
+                          Booking...
                           <Loader2 className="w-6 h-6 animate-spin" />
                         </>
                       ) : (
                         <>
-                          Send Message
+                          Book a Job Now
                           <Send className="w-5 h-5" />
                         </>
                       )}
@@ -192,7 +303,7 @@ export default function Contact() {
                 </motion.div>
               )}
             </AnimatePresence>
-          </div>
+          </motion.div>
         </div>
 
         {/* Map Section - Premium Look */}

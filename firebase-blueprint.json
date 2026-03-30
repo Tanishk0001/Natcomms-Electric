@@ -28,12 +28,29 @@
         }
       },
       "required": ["name", "rating", "comment", "createdAt"]
+    },
+    "ContactInquiry": {
+      "title": "ContactInquiry",
+      "description": "A customer inquiry from the contact form.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "phone": { "type": "string" },
+        "service": { "type": "string" },
+        "message": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "phone", "service", "message", "createdAt"]
     }
   },
   "firestore": {
     "/reviews/{reviewId}": {
       "schema": "Review",
       "description": "Collection of customer reviews."
+    },
+    "/contacts/{contactId}": {
+      "schema": "ContactInquiry",
+      "description": "Collection of customer inquiries."
     }
   }
 }

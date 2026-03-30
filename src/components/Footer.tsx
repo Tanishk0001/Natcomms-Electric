@@ -1,17 +1,24 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Zap, Mail, Phone, MapPin, Facebook, Instagram, Linkedin } from 'lucide-react';
+import { motion } from 'motion/react';
 
 export default function Footer() {
   return (
-    <footer className="bg-slate-900 text-slate-300 pt-16 pb-8 px-6">
+    <motion.footer 
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 1 }}
+      className="bg-slate-900 text-slate-300 pt-16 pb-8 px-6"
+    >
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
         {/* Brand */}
         <div className="space-y-10">
           <Link to="/" className="flex items-center gap-2 group">
             <img 
               src="https://lh3.googleusercontent.com/d/1-em5jqYibujv_D-PWZzj_HxzG9y3XLXj" 
-              alt="National Electro Logo" 
+              alt="National Electrics Logo" 
               className="h-24 w-auto object-contain brightness-0 invert drop-shadow-[0_0_15px_rgba(255,255,255,0.2)] group-hover:scale-105 transition-all duration-500"
               referrerPolicy="no-referrer"
             />
@@ -77,12 +84,12 @@ export default function Footer() {
       </div>
 
       <div className="max-w-7xl mx-auto pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
-        <p>© {new Date().getFullYear()} National Electro. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} National Electrics. All rights reserved.</p>
         <div className="flex gap-6">
           <a href="#" className="hover:text-white">Privacy Policy</a>
           <a href="#" className="hover:text-white">Terms of Service</a>
         </div>
       </div>
-    </footer>
+    </motion.footer>
   );
 }
